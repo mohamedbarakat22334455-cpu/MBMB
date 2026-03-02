@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إمبراطورية خلاصة الذكاء | التحقق الذكي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030508;
+            --primary: #00f2fe;
+            --secondary: #7000ff;
+            --accent: #ff007a;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(0, 242, 254, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg);
+            color: #fff;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(0, 242, 254, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(112, 0, 255, 0.1) 0%, transparent 40%);
+        }
+
+        /* --- شاشة تسجيل البيانات --- */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 10000; display: flex; align-items: center; justify-content: center;
+        }
+        .login-box {
+            background: rgba(17, 24, 39, 0.85); padding: 40px; border-radius: 30px;
+            border: 2px solid var(--primary); text-align: center; width: 90%; max-width: 450px;
+            backdrop-filter: blur(25px); box-shadow: 0 0 50px rgba(0,242,254,0.3);
+        }
+        .login-box h2 { font-family: 'Orbitron'; color: var(--primary); margin-bottom: 10px; font-size: 2.2rem; }
+        .login-box p { color: #94a3b8; margin-bottom: 20px; font-size: 0.9rem; }
+        
+        .login-box input {
+            width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid var(--border);
+            background: rgba(255,255,255,0.05); color: #fff; font-family: 'Cairo'; outline: none; font-size: 1rem;
+            transition: 0.3s;
+        }
+        .login-box input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); }
+
+        .login-box button {
+            width: 100%; padding: 16px; background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none; border-radius: 12px; color: #000; font-weight: 900; cursor: pointer; margin-top: 15px;
+            font-size: 1.1rem; transition: 0.4s;
+        }
+        .login-box button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4); filter: brightness(1.2); }
+
+        /* --- محتوى الموقع (مخفي قبل التسجيل) --- */
+        #main-content { display: none; }
+
+        header { text-align: center; padding: 100px 20px 50px; }
+        header h1 {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 8vw, 5rem);
+            background: linear-gradient(90deg, var(--primary), #fff, var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px var(--primary)); letter-spacing: 3px; margin-bottom: 20px;
+        }
+        header p { color: #94a3b8; font-size: 1.2rem; max-width: 800px; margin: 0 auto; border-right: 3px solid var(--primary); padding-right: 15px; }
+
+        .category-title {
+            text-align: center; margin: 60px 0 30px; font-size: 2rem; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 2px; font-weight: 900; text-shadow: 0 0 10px var(--accent);
+        }
+
+        .container {
+            max-width: 1400px; margin: 0 auto; padding: 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;
+        }
+
+        .card {
+            background: var(--glass); border: 1px solid var(--border); border-radius: 25px;
+            padding: 35px 25px; text-align: center; transition: 0.4s;
+            backdrop-filter: blur(15px); position: relative;
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 0 30px rgba(0, 242, 254, 0.2); }
+
+        .icon { font-size: 50px; margin-bottom: 15px; display: inline-block; filter: drop-shadow(0 0 5px var(--primary)); }
+        .card h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.5rem; font-weight: 900; }
+        .card p { color: #cbd5e1; font-size: 0.9rem; margin-bottom: 25px; height: 40px; }
+
+        .btn {
+            display: block; padding: 14px; background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: #000; text-decoration: none; border-radius: 12px; font-weight: 900; transition: 0.3s;
+        }
+        .btn:hover { filter: brightness(1.2); box-shadow: 0 0 15px var(--primary); }
+
+        footer { text-align: center; padding: 60px; border-top: 1px solid var(--border); margin-top: 50px; background: #010204; }
+        .status { color: #00ff7f; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.9rem; }
+        .dot { width: 10px; height: 10px; background: #00ff7f; border-radius: 50%; box-shadow: 0 0 10px #00ff7f; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    </style>
+</head>
+<body>
+
+<div id="login-overlay">
+    <div class="login-box">
+        <h2>IDENTIFY</h2>
+        <p>الرجاء إدخال بيانات حقيقية لتفعيل الأدوات</p>
+        <input type="text" id="userName" placeholder="الاسم ثلاثي" required>
+        <input type="tel" id="userPhone" placeholder="رقم الموبايل (11 رقم)" maxlength="11" required>
+        <button onclick="validateAndEnter()">دخول الإمبراطورية</button>
+    </div>
+</div>
+
+<div id="main-content">
+    <header>
+        <h1>AI EMPIRE 32</h1>
+        <p>مرحباً بك في المنطقة الخاصة بمؤسسة خلاصة الذكاء</p>
+    </header>
+
+    <div class="category-title">── النصوص والبحث ──</div>
+    <div class="container">
+        <div class="card"><div class="icon">💬</div><h3>ChatGPT</h3><p>المساعد الذكي الأول عالمياً للكتابة والتحليل.</p><a href="https://chatgpt.com" target="_blank" class="btn">فتح الأداة</a></div>
+        <div class="card"><div class="icon">🧠</div><h3>Claude AI</h3><p>الرائد في الدقة اللغوية وتحليل البيانات الضخمة.</p><a href="https://claude.ai" target="_blank" class="btn">فتح الأداة</a></div>
+        <div class="card"><div class="icon">🔍</div><h3>Perplexity</h3><p>محرك البحث الذي يعطيك الإجابة مع المصادر.</p><a href="https://www.perplexity.ai" target="_blank" class="btn">بحث ذكي</a></div>
+        <div class="card"><div class="icon">🐦</div><h3>Grok AI</h3><p>ذكاء اصطناعي مطلع على أحداث العالم الحية.</p><a href="https://x.com/i/grok" target="_blank" class="btn">فتح الأداة</a></div>
+        <div class="card"><div class="icon">✍️</div><h3>Copy.ai</h3><p>كتابة المحتوى التسويقي والإعلاني باحترافية.</p><a href="https://www.copy.ai" target="_blank" class="btn">ابدأ الكتابة</a></div>
+        <div class="card"><div class="icon">📝</div><h3>Jasper</h3><p>توليد مقالات طويلة محسنة لمحركات البحث.</p><a href="https://www.jasper.ai" target="_blank" class="btn">فتح الأداة</a></div>
+    </div>
+
+    <div class="category-title">── الصور والتصميم ──</div>
+    <div class="container">
+        <div class="card"><div class="icon">🎨</div><h3>Midjourney</h3><p>أقوى أداة لتوليد الصور السينمائية واللوحات الفنية.</p><a href="https://www.midjourney.com" target="_blank" class="btn">ابدأ الفن</a></div>
+        <div class="card"><div class="icon">📸</div><h3>Leonardo AI</h3><p>توليد صور فنية وشعارات بجودة عالية مجاناً.</p><a href="https://leonardo.ai" target="_blank" class="btn">صمم الآن</a></div>
+        <div class="card"><div class="icon">🪄</div><h3>Adobe Firefly</h3><p>أدوات فوتوشوب الثورية بالذكاء الاصطناعي.</p><a href="https://firefly.adobe.com" target="_blank" class="btn">فتح الأداة</a></div>
+        <div class="card"><div class="icon">🖍️</div><h3>DALL-E 3</h3><p>تحويل الأفكار إلى صور واقعية من OpenAI.</p><a href="https://chatgpt.com" target="_blank" class="btn">فتح الأداة</a></div>
+        <div class="card"><div class="icon">🧹</div><h3>Magic Eraser</h3><p>إزالة أي عنصر غير مرغوب فيه من الصور فوراً.</p><a href="https://magicstudio.com/magiceraser" target="_blank" class="btn">نظف صورتك</a></div>
+        <div class="card"><div class="icon">🖼️</div><h3>ClipDrop</h3><p>أدوات شاملة لتحسين وتعديل خلفيات الصور.</p><a href="https://clipdrop.co" target="_blank" class="btn">فتح الأداة</a></div>
+    </div>
+
+    <div class="category-title">── الفيديو والأنيميشن ──</div>
+    <div class="container">
+        <div class="card"><div class="icon">🎥</div><h3>Sora</h3><p>تحويل الوصف النصي إلى فيديو سينمائي مذهل.</p><a href="https://openai.com/sora" target="_blank" class="btn">استكشف Sora</a></div>
+        <div class="card"><div class="icon">🎞️</div><h3>Runway Gen-3</h3><p>أحدث جيل من أدوات توليد ومونتاج الفيديو.</p><a href="https://runwayml.com" target="_blank" class="btn">اصنع فيديو</a></div>
+        <div class="card"><div class="icon">🗣️</div><h3>HeyGen</h3><p>إنتاج فيديوهات لشخصيات تتحدث بأي لغة.</p><a href="https://www.heygen.com" target="_blank" class="btn">صمم فيديو</a></div>
+        <div class="card"><div class="icon">🎬</div><h3>Pika Labs</h3><p>تحريك الصور الثابتة وتحويلها لمشاهد مذهلة.</p><a href="https://pika.art" target="_blank" class="btn">ابدأ التحريك</a></div>
+        <div class="card"><div class="icon">⚡</div><h3>Kaiber</h3><p>صناعة فيديوهات موسيقية وفنية فريدة.</p><a href="https://kaiber.ai" target="_blank" class="btn">فتح الأداة</a></div>
+        <div class="card"><div class="icon">📹</div><h3>InVideo AI</h3><p>تحويل الأفكار إلى فيديوهات يوتيوب كاملة.</p><a href="https://invideo.io" target="_blank" class="btn">اصنع فيديو</a></div>
+    </div>
+
+    <div class="category-title">── الصوت والموسيقى ──</div>
+    <div class="container">
+        <div class="card"><div class="icon">🎙️</div><h3>ElevenLabs</h3><p>أدق نظام في العالم لتحويل النص إلى صوت بشري.</p><a href="https://elevenlabs.io" target="_blank" class="btn">حول الآن</a></div>
+        <div class="card"><div class="icon">🎵</div><h3>Suno AI</h3><p>تلحين وإنتاج أغاني كاملة بمجرد كتابة الكلمات.</p><a href="https://suno.com" target="_blank" class="btn">لحن أغنية</a></div>
+        <div class="card"><div class="icon">🎧</div><h3>Udio</h3><p>توليد موسيقى وأغاني بجودة استوديو احترافي.</p><a href="https://www.udio.com" target="_blank" class="btn">دخول</a></div>
+        <div class="card"><div class="icon">🧼</div><h3>Adobe Podcast</h3><p>إزالة الضوضاء وتحسين جودة الصوت بشكل سحري.</p><a href="https://podcast.adobe.com/enhance" target="_blank" class="btn">نقي صوتك</a></div>
+        <div class="card"><div class="icon">✂️</div><h3>Lalal.ai</h3><p>فصل الموسيقى عن صوت المغني بدقة مذهلة.</p><a href="https://www.lalal.ai" target="_blank" class="btn">فصل الصوت</a></div>
+    </div>
+
+    <div class="category-title">── البرمجة والمواقع ──</div>
+    <div class="container">
+        <div class="card"><div class="icon">💻</div><h3>Blackbox AI</h3><p>أسرع مساعد برمجي لكتابة وشرح الأكواد.</p><a href="https://www.blackbox.ai" target="_blank" class="btn">ابدأ البرمجة</a></div>
+        <div class="card"><div class="icon">🛠️</div><h3>Replit Agent</h3><p>بناء تطبيقات ومواقع كاملة من خلال الدردشة.</p><a href="https://replit.com" target="_blank" class="btn">ابنِ تطبيقك</a></div>
+        <div class="card"><div class="icon">🌐</div><h3>10Web</h3><p>بناء واستضافة مواقع ووردبريس في دقيقة واحدة.</p><a href="https://10web.io" target="_blank" class="btn">ابنِ موقعك</a></div>
+        <div class="card"><div class="icon">🏗️</div><h3>Framer AI</h3><p>تصميم مواقع ويب مذهلة وعصرية بالذكاء الاصطناعي.</p><a href="https://www.framer.com" target="_blank" class="btn">صمم موقعك</a></div>
+        <div class="card"><div class="icon">📦</div><h3>Durable AI</h3><p>بناء موقع عمل تجاري كامل مع الصور والمحتوى.</p><a href="https://durable.co" target="_blank" class="btn">فتح الأداة</a></div>
+    </div>
+
+    <div class="category-title">── الإنتاجية والطلاب ──</div>
+    <div class="container">
+        <div class="card"><div class="icon">📊</div><h3>Gamma App</h3><p>إنشاء عروض تقديمية (PowerPoint) في ثوانٍ.</p><a href="https://gamma.app" target="_blank" class="btn">أنشئ عرضك</a></div>
+        <div class="card"><div class="icon">📑</div><h3>ChatPDF</h3><p>الدردشة مع أي ملف PDF واستخراج المعلومات منه.</p><a href="https://www.chatpdf.com" target="_blank" class="btn">حلل كتابك</a></div>
+        <div class="card"><div class="icon">🌍</div><h3>DeepL</h3><p>الترجمة الأدق في العالم لجميع اللغات الرسمية.</p><a href="https://www.deepl.com/translator" target="_blank" class="btn">ترجم الآن</a></div>
+        <div class="card"><div class="icon">📉</div><h3>Julius AI</h3><p>محلل بيانات عبقري لملفات الإكسيل والجداول.</p><a href="https://julius.ai" target="_blank" class="btn">حلل بياناتك</a></div>
+    </div>
+
+    <footer>
+        <p>جميع الحقوق محفوظة لمؤسسة "خلاصة الذكاء" &copy; 2026</p>
+        <div class="status"><div class="dot"></div><span>جميع الأنظمة نشطة | المستخدمين حالياً: 12,450</span></div>
+    </footer>
+</div>
+
+<script>
+    function validateAndEnter() {
+        const name = document.getElementById('userName').value.trim();
+        const phone = document.getElementById('userPhone').value.trim();
+
+        // شرط التحقق من الاسم (أكثر من 5 حروف)
+        if (name.length < 5) {
+            alert("يرجى كتابة الاسم الثلاثي بشكل صحيح.");
+            return;
+        }
+
+        // شرط التحقق من الرقم (11 رقم بالضبط ويبدأ بـ 01)
+        const phonePattern = /^(010|011|012|015)[0-9]{8}$/;
+        
+        if (!phonePattern.test(phone)) {
+            alert("خطأ: يرجى إدخال رقم موبايل صحيح مكون من 11 رقم (010, 011, 012, 015).");
+            return;
+        }
+
+        // لو البيانات صحيحة يتم فتح الموقع
+        alert("تم التحقق بنجاح.. أهلاً بك في الإمبراطورية يا " + name);
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        
+        // حفظ في ذاكرة المتصفح
+        localStorage.setItem('verified_user', name);
+    }
+
+    // فحص إذا كان مسجل مسبقاً
+    window.onload = function() {
+        if (localStorage.getItem('verified_user')) {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
